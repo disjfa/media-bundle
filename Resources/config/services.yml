@@ -12,11 +12,15 @@ services:
         resource: '../../Controller'
         tags: ['controller.service_arguments']
 
-    Disjfa\MediaBundle\Security\:
-        resource: './../../Security/*'
-        tags: ['security.voter']
+#    Disjfa\MediaBundle\Security\:
+#        resource: './../../Security/*'
+#        tags: ['security.voter']
 
     Disjfa\MediaBundle\Menu\MediaMenuBuilder:
         autowire: true
         tags:
           - { name: 'kernel.event_listener', event: 'glynn_site.menu_configure', method: 'onMenuConfigure' }
+
+    Disjfa\MediaBundle\Service\UploadService:
+        $uploadPath: '%env(UPLOAD_PATH)%'
+        $rootDir: '%kernel.project_dir%'

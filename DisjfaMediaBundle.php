@@ -1,6 +1,6 @@
 <?php
 
-namespace Disjfa\TimetableBundle;
+namespace Disjfa\MediaBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
