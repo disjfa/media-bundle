@@ -1,0 +1,22 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: false
+        public: false
+
+    Disjfa\MediaBundle\:
+        resource: './../../*'
+        exclude: './../../{Entity,Migrations,Tests}'
+
+    Disjfa\MediaBundle\Controller\:
+        resource: '../../Controller'
+        tags: ['controller.service_arguments']
+
+    Disjfa\MediaBundle\Security\:
+        resource: './../../Security/*'
+        tags: ['security.voter']
+
+    Disjfa\MediaBundle\Menu\MediaMenuBuilder:
+        autowire: true
+        tags:
+          - { name: 'kernel.event_listener', event: 'glynn_site.menu_configure', method: 'onMenuConfigure' }
