@@ -24,3 +24,8 @@ services:
     Disjfa\MediaBundle\Service\UploadService:
         $uploadPath: '%env(UPLOAD_PATH)%'
         $rootDir: '%kernel.project_dir%'
+
+    Disjfa\MediaBundle\Menu\AdminMediaMenuListener:
+        autowire: true
+        tags:
+        - { name: 'kernel.event_listener', event: 'glynn_admin.menu_configure', method: 'onMenuConfigure', priority: -50 }

@@ -1,0 +1,11 @@
+page_title:
+    media: Media
+    edit: Edit %media%
+success:
+    media_saved: Media saved
+    media_deleted: Media saved
+menu:
+    media: Media
+form:
+    name: Name
+    upload: Upload
