@@ -5,7 +5,7 @@ namespace Disjfa\MediaBundle\Menu;
 use App\Menu\ConfigureMenuEvent;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class MediaMenuBuilder
+class AdminMediaMenuListener
 {
     /**
      * @var TranslatorInterface
@@ -27,11 +27,11 @@ class MediaMenuBuilder
      */
     public function onMenuConfigure(ConfigureMenuEvent $event)
     {
-//        $menu = $event->getMenu();
-//
-//        $menu->addChild('timetable', [
-//            'route' => 'disjfa_timetable_timetable_index',
-//            'label' => $this->translator->trans('menu.timetable', [], 'site'),
-//        ])->setExtra('icon', 'fa-calendar');
+        $menu = $event->getMenu();
+
+        $menu->addChild('media', [
+            'route' => 'disjfa_media_admin_media_index',
+            'label' => $this->translator->trans('menu.media', [], 'disjfa-media'),
+        ])->setExtra('icon', 'fa-image');
     }
 }

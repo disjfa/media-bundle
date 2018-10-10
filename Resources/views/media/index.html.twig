@@ -1,0 +1,36 @@
+{% extends "admin.html.twig" %}
+
+{% trans_default_domain 'disjfa-media' %}
+
+{% block page_title_text %}
+    {{ 'page_title.media' | trans }}
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-sm-3 py-2 bg-light">
+                {{ form_start(form, {attr: {class: 'js-media-form', 'data-csrf-token': csrf_token('media') }}) }}
+                {{ form_rest(form) }}
+                {{ form_end(form) }}
+            </div>
+
+            <div class="col-12 col-sm-9">
+                <div class="row">
+                    {% for item in media %}
+                        <a class="col-12 col-sm-4 py-2" href="{{ path('disjfa_media_admin_media_edit', {'media': item.id}) }}">
+                            <div class="card">
+                                <img src="{{ item.url }}" alt="" class="card-img-top">
+                                <div class="card-footer">
+                                    <div class="text-nowrap d-block" style="text-overflow: ellipsis; overflow: hidden">
+                                        {{ item.name }}
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
