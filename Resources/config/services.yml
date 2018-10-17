@@ -16,11 +16,6 @@ services:
 #        resource: './../../Security/*'
 #        tags: ['security.voter']
 
-    Disjfa\MediaBundle\Menu\MediaMenuBuilder:
-        autowire: true
-        tags:
-          - { name: 'kernel.event_listener', event: 'glynn_site.menu_configure', method: 'onMenuConfigure' }
-
     Disjfa\MediaBundle\Service\UploadService:
         $uploadPath: '%env(UPLOAD_PATH)%'
         $rootDir: '%kernel.project_dir%'
@@ -28,4 +23,4 @@ services:
     Disjfa\MediaBundle\Menu\AdminMediaMenuListener:
         autowire: true
         tags:
-        - { name: 'kernel.event_listener', event: 'glynn_admin.menu_configure', method: 'onMenuConfigure', priority: -50 }
+        - { name: 'kernel.event_listener', event: 'admin.menu_configure', method: 'onMenuConfigure', priority: -50 }

@@ -1,0 +1,11 @@
+{% block media_widget %}
+    <div class="js-upload-form">
+        {{ form_widget(form) }}
+        <div class="py-2">
+            {% if form.vars.value %}
+                <img src="{{ form.vars.value }}" alt="" class="img-thumbnail">
+            {% endif %}
+        </div>
+        <input type="file" data-csrf-token="{{ csrf_token('upload') }}" data-target="#{{ form.vars.id }}">
+    </div>
+{% endblock %}

@@ -4,7 +4,7 @@ namespace Disjfa\MediaBundle\Controller\Admin;
 
 use Disjfa\MediaBundle\Entity\Media;
 use Disjfa\MediaBundle\Form\Type\MediaEditType;
-use Disjfa\MediaBundle\Form\Type\MediaType;
+use Disjfa\MediaBundle\Form\Type\UploadType;
 use Disjfa\MediaBundle\Model\MediaModel;
 use Disjfa\MediaBundle\Service\UploadService;
 use Exception;
@@ -45,7 +45,7 @@ class MediaController extends Controller
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         $upload = new MediaModel();
-        $form = $this->createForm(MediaType::class, $upload);
+        $form = $this->createForm(UploadType::class, $upload);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);

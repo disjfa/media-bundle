@@ -2,7 +2,7 @@
 
 namespace Disjfa\MediaBundle\Controller\Api;
 
-use Disjfa\MediaBundle\Form\Type\MediaType;
+use Disjfa\MediaBundle\Form\Type\UploadType;
 use Disjfa\MediaBundle\Model\MediaModel;
 use Disjfa\MediaBundle\Service\UploadService;
 use Exception;
@@ -40,14 +40,14 @@ class MediaController extends Controller
         $this->denyAccessUnlessGranted('ROLE_USER');
 
         $upload = new MediaModel();
-        $form = $this->createForm(MediaType::class, $upload);
+        $form = $this->createForm(UploadType::class, $upload);
 
         $form->handleRequest($request);
         try {
             $media = $this->uploadService->uploadFile($upload);
         } catch (Exception $e) {
             return new JsonResponse([
-                'messsage' => 'Upload failed',
+                'messsage' => $e->getMessage(),
             ], 400);
         }
 

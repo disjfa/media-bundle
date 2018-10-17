@@ -2,35 +2,13 @@
 
 namespace Disjfa\MediaBundle\Form\Type;
 
-use Disjfa\MediaBundle\Model\MediaModel;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class MediaType extends AbstractType
 {
-    /**
-     * @param FormBuilderInterface $builder
-     * @param array $options
-     */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function getParent()
     {
-        $builder->add('upload', FileType::class, [
-            'required' => false,
-            'label' => 'form.upload',
-        ]);
+        return TextType::class;
     }
-
-    /**
-     * @param OptionsResolver $resolver
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults([
-            'data_class' => MediaModel::class,
-            'translation_domain' => 'disjfa-media'
-        ]);
-    }
-
 }
