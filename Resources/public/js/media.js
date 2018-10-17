@@ -3,14 +3,14 @@ import axios from 'axios';
 document.addEventListener("DOMContentLoaded", initFileElements);
 
 function initFileElements() {
-  for (let input of document.querySelectorAll('.js-media-form input[type=file]')) {
+  for (let input of document.querySelectorAll('.js-upload-form input[type=file]')) {
     input.addEventListener('change', handleFiles, false);
   }
 }
 
 function handleFiles(e) {
   const { files } = e.target;
-  const { csrfToken } = e.target.form.dataset;
+  const csrfToken = e.target.dataset.csrfToken || e.target.form.dataset.csrfToken;
 
   if (!csrfToken) {
     console.warn('No csrf-token data tag on form');
@@ -18,18 +18,25 @@ function handleFiles(e) {
   }
 
   for (let file of files) {
-    uploadFile(file, csrfToken, e.target.form);
+    uploadFile(file, csrfToken, e.target);
   }
 }
 
-function uploadFile(file, csrfToken, form) {
+function uploadFile(file, csrfToken, input) {
   const uploadForm = new FormData();
-  uploadForm.append('media[_token]', csrfToken);
-  uploadForm.append('media[upload]', file);
+  uploadForm.append('upload[_token]', csrfToken);
+  uploadForm.append('upload[upload]', file);
   axios
     .post('/api/upload/', uploadForm)
     .then(result => {
       const { name, url } = result.data;
+
+      if (input.dataset.target) {
+        const element = document.querySelector(input.dataset.target);
+        if (element.tagName.toLowerCase() === 'input') {
+          element.value = url;
+        }
+      }
 
       const div = document.createElement('div');
       div.classList.add('alert', 'alert-success');
@@ -41,7 +48,7 @@ function uploadFile(file, csrfToken, form) {
 
       div.appendChild(img);
 
-      form.append(div);
+      input.parentNode.append(div);
     })
     .catch(error => {
       console.log(error.response);
