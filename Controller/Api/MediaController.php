@@ -31,8 +31,11 @@ class MediaController extends Controller
     /**
      * @Route("/", name="disjfa_media_api_media_upload")
      * @Method("POST")
+     *
      * @param Request $request
+     *
      * @return Response
+     *
      * @throws Exception
      */
     public function uploadAction(Request $request)

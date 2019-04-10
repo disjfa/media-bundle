@@ -12,7 +12,7 @@ class UploadType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
-     * @param array $options
+     * @param array                $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -29,8 +29,7 @@ class UploadType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => MediaModel::class,
-            'translation_domain' => 'disjfa-media'
+            'translation_domain' => 'disjfa-media',
         ]);
     }
-
 }

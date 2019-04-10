@@ -37,25 +37,27 @@ class UploadService
     private $entityManager;
 
     /**
-     * @var UserInterface $user
+     * @var UserInterface
      */
     private $user;
 
     /**
      * UploadService constructor.
-     * @param string $uploadPath
-     * @param string $rootDir
-     * @param RequestStack $requestStack
-     * @param Filesystem $filesystem
+     *
+     * @param string                 $uploadPath
+     * @param string                 $rootDir
+     * @param RequestStack           $requestStack
+     * @param Filesystem             $filesystem
      * @param EntityManagerInterface $entityManager
-     * @param TokenStorageInterface $token
+     * @param TokenStorageInterface  $token
+     *
      * @throws Exception
      */
     public function __construct(string $uploadPath, string $rootDir, RequestStack $requestStack, Filesystem $filesystem, EntityManagerInterface $entityManager, TokenStorageInterface $token)
     {
-        $this->uploadFolder = realpath($rootDir . $uploadPath);
+        $this->uploadFolder = realpath($rootDir.$uploadPath);
         if (null === $this->uploadFolder) {
-            throw new Exception('Path does not exists: ' . $rootDir . $uploadPath);
+            throw new Exception('Path does not exists: '.$rootDir.$uploadPath);
         }
         $this->request = $requestStack->getMasterRequest();
         $this->filesystem = $filesystem;
@@ -65,7 +67,9 @@ class UploadService
 
     /**
      * @param MediaModel $upload
+     *
      * @return Media
+     *
      * @throws Exception
      */
     public function uploadFile(MediaModel $upload)
@@ -77,20 +81,20 @@ class UploadService
 
         $date = new DateTime('now');
         $folder = $this->uploadFolder;
-        $folder = $folder . '/' . $date->format('Y');
+        $folder = $folder.'/'.$date->format('Y');
         if (false === $this->filesystem->exists($folder)) {
             $this->filesystem->mkdir($folder);
         }
-        $folder .= '/' . $date->format('m');
+        $folder .= '/'.$date->format('m');
         if (false === $this->filesystem->exists($folder)) {
             $this->filesystem->mkdir($folder);
         }
-        $folder .= '/' . $date->format('d');
+        $folder .= '/'.$date->format('d');
         if (false === $this->filesystem->exists($folder)) {
             $this->filesystem->mkdir($folder);
         }
 
-        $filename = sha1(uniqid(mt_rand(), true)) . '.' . $upload->guessExtension();
+        $filename = sha1(uniqid(mt_rand(), true)).'.'.$upload->guessExtension();
         $file = $upload->move($folder, $filename);
 
         $media = new Media($file, $upload->getClientOriginalName(), $this->user->getId());

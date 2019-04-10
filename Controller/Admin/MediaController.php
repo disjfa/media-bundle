@@ -36,8 +36,11 @@ class MediaController extends Controller
 
     /**
      * @Route("/", name="disjfa_media_admin_media_index")
+     *
      * @param Request $request
+     *
      * @return Response
+     *
      * @throws Exception
      */
     public function indexAction(Request $request)
@@ -54,6 +57,7 @@ class MediaController extends Controller
             } catch (Exception $e) {
                 $this->addFlash('warning', $e->getMessage());
             }
+
             return $this->redirectToRoute('disjfa_media_admin_media_index');
         }
 
@@ -65,8 +69,10 @@ class MediaController extends Controller
 
     /**
      * @Route("/{media}", name="disjfa_media_admin_media_edit")
+     *
      * @param Request $request
-     * @param Media $media
+     * @param Media   $media
+     *
      * @return Response
      */
     public function editAction(Request $request, Media $media)
@@ -78,7 +84,6 @@ class MediaController extends Controller
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
             if ($form->isValid()) {
-
                 $this->getDoctrine()->getManager()->persist($media);
                 $this->getDoctrine()->getManager()->flush();
                 $this->addFlash('success', $this->translator->trans('success.media_saved', [], 'disjfa-media'));
