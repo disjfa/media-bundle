@@ -7,6 +7,7 @@ use Disjfa\MediaBundle\Model\MediaModel;
 use Disjfa\MediaBundle\Service\UploadService;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @Route("/api/upload")
  */
-class MediaController extends Controller
+class MediaController extends AbstractController
 {
     /**
      * @var UploadService

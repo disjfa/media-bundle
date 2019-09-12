@@ -34,7 +34,7 @@ class Media
 
     /**
      * @var string
-     * @ORM\Column(name="user_id", type="string")
+     * @ORM\Column(name="user_id", type="string", nullable=true)
      */
     private $userId;
 

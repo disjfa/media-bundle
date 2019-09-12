@@ -18,6 +18,7 @@ services:
 
     Disjfa\MediaBundle\Service\UploadService:
         $uploadPath: '%env(UPLOAD_PATH)%'
+        $publicPath: '%env(UPLOAD_PUBLIC_PATH)%'
         $rootDir: '%kernel.project_dir%'
 
     Disjfa\MediaBundle\Menu\AdminMediaMenuListener:

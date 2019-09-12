@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use FOS\UserBundle\Model\UserInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -44,25 +45,29 @@ class UploadService
     /**
      * UploadService constructor.
      *
-     * @param string                 $uploadPath
-     * @param string                 $rootDir
-     * @param RequestStack           $requestStack
-     * @param Filesystem             $filesystem
+     * @param string $uploadPath
+     * @param string $rootDir
+     * @param string $publicPath
+     * @param RequestStack $requestStack
+     * @param Filesystem $filesystem
      * @param EntityManagerInterface $entityManager
-     * @param TokenStorageInterface  $token
+     * @param TokenStorageInterface $token
      *
      * @throws Exception
      */
-    public function __construct(string $uploadPath, string $rootDir, RequestStack $requestStack, Filesystem $filesystem, EntityManagerInterface $entityManager, TokenStorageInterface $token)
+    public function __construct(string $uploadPath, string $rootDir, string $publicPath,RequestStack $requestStack, Filesystem $filesystem, EntityManagerInterface $entityManager, TokenStorageInterface $token)
     {
-        $this->uploadFolder = realpath($rootDir.$uploadPath);
+        $this->publicFolder = realpath($rootDir . $publicPath);
+        $this->uploadFolder = realpath($rootDir . $uploadPath);
         if (null === $this->uploadFolder) {
-            throw new Exception('Path does not exists: '.$rootDir.$uploadPath);
+            throw new Exception('Path does not exists: ' . $rootDir . $uploadPath);
         }
         $this->request = $requestStack->getMasterRequest();
         $this->filesystem = $filesystem;
         $this->entityManager = $entityManager;
-        $this->user = $token->getToken()->getUser();
+        if (null !== $token->getToken()) {
+            $this->user = $token->getToken()->getUser();
+        }
     }
 
     /**
@@ -79,30 +84,50 @@ class UploadService
             throw new Exception('No uploaded file found');
         }
 
-        $date = new DateTime('now');
-        $folder = $this->uploadFolder;
-        $folder = $folder.'/'.$date->format('Y');
-        if (false === $this->filesystem->exists($folder)) {
-            $this->filesystem->mkdir($folder);
-        }
-        $folder .= '/'.$date->format('m');
-        if (false === $this->filesystem->exists($folder)) {
-            $this->filesystem->mkdir($folder);
-        }
-        $folder .= '/'.$date->format('d');
-        if (false === $this->filesystem->exists($folder)) {
-            $this->filesystem->mkdir($folder);
-        }
+        return $this->saveFile($upload, $upload->getClientOriginalName());
+    }
 
-        $filename = sha1(uniqid(mt_rand(), true)).'.'.$upload->guessExtension();
-        $file = $upload->move($folder, $filename);
+    /**
+     * @param File $file
+     * @param string $fileName
+     * @return Media
+     * @throws Exception
+     */
+    public function saveFile(File $file, string $fileName)
+    {
+        $folder = $this->getFolder();
+        $filename = sha1(uniqid(mt_rand(), true)) . '.' . $file->guessExtension();
+        $file = $file->move($folder, $filename);
 
-        $media = new Media($file, $upload->getClientOriginalName(), $this->user->getId());
-        $media->setUrl($this->request->getUriForPath(str_replace($this->request->server->get('DOCUMENT_ROOT'), '', $file->getRealPath())));
+        $userId = null;
+        if($this->user) {
+            $userId = $this->user->getId();
+        }
+        $media = new Media($file, $fileName, $userId);
+        $media->setUrl(str_replace($this->publicFolder, '', $file->getRealPath()));
 
         $this->entityManager->persist($media);
         $this->entityManager->flush();
 
         return $media;
+    }
+
+    private function getFolder()
+    {
+        $date = new DateTime('now');
+        $folder = $this->uploadFolder;
+        $folder = $folder . '/' . $date->format('Y');
+        if (false === $this->filesystem->exists($folder)) {
+            $this->filesystem->mkdir($folder);
+        }
+        $folder .= '/' . $date->format('m');
+        if (false === $this->filesystem->exists($folder)) {
+            $this->filesystem->mkdir($folder);
+        }
+        $folder .= '/' . $date->format('d');
+        if (false === $this->filesystem->exists($folder)) {
+            $this->filesystem->mkdir($folder);
+        }
+        return $folder;
     }
 }
